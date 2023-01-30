@@ -12,7 +12,7 @@ terraform {
     storage_account_name = "demorgtfstore"
     container_name       = "terraform"
     key                  = "terraform.tfstate"
-    #use_oidc             = true
+    use_oidc             = true
   }
 }
 
