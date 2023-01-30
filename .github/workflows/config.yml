@@ -29,12 +29,12 @@ jobs:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
     - name: terraform init
       run: |
-        cd src/terraform
+        
         terraform init
       
     - name: terraform Plan
       run: |
-        cd src/terraform
+        
         terraform plan
         #env: 
         #ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID}}
