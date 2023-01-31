@@ -46,4 +46,4 @@ jobs:
         resource_group_name: demorg
         container_name: terraform 
         storage_account_name: demorgtfstore
-        tf_working_directory: sRIKanth_azt
+        tf_working_directory: srikanth_azt
