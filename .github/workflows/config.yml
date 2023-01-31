@@ -43,10 +43,10 @@ jobs:
       uses: ahmedig/terraform-azurerm-backend@v4
       with: 
         azure_credentials: ${{ secrets.RBAC_CREDENTIALS_DEVELOPEMENT   }}
-        resource_group_name: 
-        container_name: 
-        storage_account_name: 
-        tf_working_directory:  
+        resource_group_name: demorg
+        container_name: terraform 
+        storage_account_name: demorgtfstore
+        tf_working_directory: sRIKanth_azt 
 
 
  
