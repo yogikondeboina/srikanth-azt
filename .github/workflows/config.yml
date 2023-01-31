@@ -10,7 +10,7 @@ permissions:
 
   
 env: 
-      ROOT_PATH: 'path ::${{github.workspace}}/${{ inputs.ROOT_PATH }}'
+      #ROOT_PATH: 'path ::${{github.workspace}}/${{ inputs.ROOT_PATH }}'
       ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID}}
       ARM_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
       ARM_SUBSCRIPTION_ID: ${{secrets.AZURE_SUBSCRIPTION_ID}}
@@ -19,7 +19,7 @@ jobs:
   terraform_plan:
     name: 'terraform plan'
     runs-on: windows-latest
-    environment: production
+    #environment: production
     
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -29,7 +29,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Login via AZ module
+    - name: Login via Az module
       uses: azure/login@v1.4.0
       with:
         creds: ${{ secrets.AZURE_CREDENTIAL_DEVELOPMENT }}
@@ -40,10 +40,24 @@ jobs:
         terraform_version: 1.3.4
     
     - name: terraform init azurem backend
-      uses: ahmedig/terraform-azurerm-backend@v4
-      with: 
-        azure_credentials: ${{ secrets.AZURE_CREDENTIAL_DEVELOPMENT }}
-        resource_group_name: demorg
-        container_name: terraform 
-        storage_account_name: demorgtfstore
-        tf_working_directory: srikanth_azt
+      run: |
+        terraform init -input=false \
+        - backend-config="resource_group_name=azrgd-demorg" \
+        - backend-config="storage_account_name=tfstore" \
+        - backend-config="contaIner_name=terraform" \
+        - backend-config="key=terraform.tfstate" \
+        - backend-config=client_secrt="$AZURE_CLIENT_SECRET" \
+        - backend-config=clint_id="$AZURE_CLIENT_ID" \
+        - backend-config=tenat_id="AZURE_TENANT_ID" \
+        - backend-config=subscription_id:"$AZURE_SUBSCRIPTION_ID"
+    - name: terraform plan
+      run: terraform pLan -out=plan.tfplan -input=false 
+
+
+
+      #with: 
+       # azure_credentials: ${{ secrets.AZURE_CREDENTIAL_DEVELOPMENT }}
+        #resource_group_name: demorg
+        #container_name: terraform 
+        #storage_account_name: demorgtfstore
+        #tf_working_directory: srikanth_azt
