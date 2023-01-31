@@ -30,7 +30,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Login via AZ module
-      uses: azure/login@1.4.0
+      uses: azure/login@v1.4.0
       with:
         creds: ${{ secrets.AZURE_CREDENTIAL_DEVELOPMENT }}
     
@@ -44,9 +44,15 @@ jobs:
       with: 
         azure_credentials: ${{ secrets.RBAC_CREDENTIALS_DEVELOPEMENT   }}
         resource_group_name: demorg
+<<<<<<< HEAD
         container_name: terraform 
         storage_account_name: demorgtfstore
         tf_working_directory: sRIKanth_azt 
+=======
+        container_name: terraform
+        storage_account_name: tfstore
+        tf_working_directory: srikanth-azt
+>>>>>>> 03b1968a94e643153cc0aa44d6fbf53269c87490
 
 
  
