@@ -42,7 +42,7 @@ jobs:
     - name: terraform init azurem backend
       uses: ahmedig/terraform-azurerm-backend@v4
       with: 
-        azure_credentials: ${{ secrets.RBAC_CREDENTIALS_DEVELOPEMENT   }}
+        azure_credentials: ${{ secrets.AZURE_CREDENTIAL_DEVELOPMENT }}
         resource_group_name: demorg
         container_name: terraform 
         storage_account_name: demorgtfstore
