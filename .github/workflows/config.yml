@@ -3,18 +3,23 @@ on:
   push:
     branches:
     - main
+permissions: 
+  contents: read 
+  pages: write 
+  id-token: write
+
   
-env: 
+#env: 
     #    ROOT_PATH: 'path ::${{github.workspace}}/${{ inputs.ROOT_PATH }}'
-      ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID}}
-      ARM_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
-      ARM_SUBSCRIPTION_ID: ${{secrets.AZURE_SUBSCRIPTION_ID}}
-      ARM_TENANT_ID: ${{secrets.AZURE_TENANT_ID}}
+      #ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID}}
+      #ARM_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
+      #ARM_SUBSCRIPTION_ID: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+      #ARM_TENANT_ID: ${{secrets.AZURE_TENANT_ID}}
 jobs:
   terraform_plan:
     name: 'terraform plan'
-    runs-on: ubuntu-latest
-    environment: production
+    runs-on: windows-latest
+    #environment: production
     
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -23,51 +28,25 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Setup terraform
-      uses: hashicorp/setup-terraform@v1
+
+    - name: Login via AZ module
+      uses: azure/login@1.4.0
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-    - name: terraform init
-      run: |
-        cd src/terraform
-        terraform init
-      
-    - name: terraform Plan
-      run: |
-        cd src/terraform
-        terraform plan
-        #env: 
-        #ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID}}
-        #ARM_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
-        #ARM_SUBSCRIPTION_ID: ${{secrets.AZURE_SUBSCRIPTION_ID}}
-        #ARM_TENANT_ID: ${{secrets.AZURE_TENANT_ID}}
-      
-  terraform_apply:
-    name: 'terraform apply'
-    needs: [terraform_plan]
-    runs-on: ubuntu-latest
-    environment: production
+        creds: ${{ secrets.AZURE_CREDENTIAL_DEVELOPMENT }}
     
-    defaults:
-      run:
-        shell: bash
+    - name: setup terraform
+      uses: hashicorp/setup-terraform@v2
+      with: 
+        terraform_version: 1.3.4
+    
+    - name: terraform init azurem backend
+      usses: ahmedig/terraform-azurerm-backend@v4
+      with: 
+        azure_credentials: ${{ secrets.RBAC_CREDENTIALS_DEVELOPEMENT   }}
+        resource_group_name: 
+        container_name: 
+        storage_account_name: 
+        tf_working_directory:  
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
 
-    - name: Setup terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
  
-    - name: terraform Init
-      run: | 
-        cd src/terraform
-        terraform init
-      working-directory: ${{ env.ROOT_PATH }}
-
-    - name: terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve
-      working-directory: ${{ env.ROOT_PATH }}
