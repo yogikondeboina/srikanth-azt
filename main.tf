@@ -8,11 +8,12 @@ terraform {
 
   # Update this block with the location of your terraform state file
   backend "azurerm" {
-    resource_group_name  = "rg-terraform-github-actions-state"
-    storage_account_name = "terraformgithubactions"
-    container_name       = "tfstate"
+    resource_group_name  = "demorg"
+    storage_account_name = "demorgtfstore"
+    container_name       = "terraform"
     key                  = "terraform.tfstate"
     use_oidc             = true
+    access_key           = "ZSdK6JS6S8xnn1V7LgL31lZmHB42GLAmwIBwe3r3yNqNkP58wfnjigIH77VuAolhI4wb7qQpUNqO+AStA1f2kA=="
   }
 }
 
